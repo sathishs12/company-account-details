@@ -27,38 +27,31 @@ const CompanySummaryTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-  const [accountData, setAccountData] = useState<ApiAccountData[]>([]);
   const [rowData, setRowData] = useState<RowData[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<{ name: string; count: number } | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'https://684fa5d6e7c42cfd17955990.mockapi.io/api/account-details/accountDetails'
-        );
-        const data: ApiAccountData[] = await response.json();
+const fetchData = async () => {
+  try {
+    const response = await fetch(
+      'https://684fa5d6e7c42cfd17955990.mockapi.io/api/account-details/accountDetails'
+    );
+    const data: ApiAccountData[] = await response.json();
 
-        setAccountData(data);
+    const companyCounts: Record<string, number> = {};
+    data.forEach((account) => {
+      companyCounts[account.companyName] = (companyCounts[account.companyName] || 0) + 1;
+    });
 
-        const companyCounts: Record<string, number> = {};
-        data.forEach((account) => {
-          companyCounts[account.companyName] = (companyCounts[account.companyName] || 0) + 1;
-        });
+    const groupedData: RowData[] = Object.entries(companyCounts).map(([name, number]) => ({
+      name,
+      number,
+    }));
 
-        const groupedData: RowData[] = Object.entries(companyCounts).map(([name, number]) => ({
-          name,
-          number,
-        }));
+    setRowData(groupedData);
+  } catch (error) {
+    console.error('Failed to fetch account data:', error);
+  }
+};
 
-        setRowData(groupedData);
-      } catch (error) {
-        console.error('Failed to fetch account data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const filteredData = useMemo(() => {
     return rowData.filter((row) =>
@@ -116,12 +109,12 @@ const CompanySummaryTable = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div
-                      onClick={() => setSelectedCompany({ name: row.name, count: row.number })}
-                      className="w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[#02343F] cursor-pointer hover:bg-[#02343F] hover:text-[#F0EDCC] transition-all"
+                      className="w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[#02343F]"
                     >
                       {row.number}
                     </div>
                   </td>
+
                 </tr>
               );
             })}

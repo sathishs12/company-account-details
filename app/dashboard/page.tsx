@@ -41,9 +41,9 @@ export default async function DashboardPage({
   const selectedCompany = searchParams?.company;
 
   if (selectedCompany) {
-    const companyAccounts = allAccounts.filter(
-      (account) => getCompanyName(account.id) === selectedCompany
-    );
+    // const companyAccounts = allAccounts.filter(
+    //   (account) => getCompanyName(account.id) === selectedCompany
+    // );
     // --- UPDATED: Pass the companyName prop ---
     // return <AccountTable   />;
     // <AccountTable accounts={companyAccounts} companyName={selectedCompany} />;
