@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-// import CompanyAnalyticsPopup from './CompanyAnalyticsPopup';
+import CompanyAnalyticsPopup from './CompanyAnalyticsPopup';
 
 interface ApiAccountData {
   id: string;
@@ -27,31 +27,38 @@ const CompanySummaryTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
+  // const [accountData, setAccountData] = useState<ApiAccountData[]>([]);
   const [rowData, setRowData] = useState<RowData[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState<{ name: string; count: number } | null>(null);
 
-const fetchData = async () => {
-  try {
-    const response = await fetch(
-      'https://684fa5d6e7c42cfd17955990.mockapi.io/api/account-details/accountDetails'
-    );
-    const data: ApiAccountData[] = await response.json();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          'https://684fa5d6e7c42cfd17955990.mockapi.io/api/account-details/accountDetails'
+        );
+        const data: ApiAccountData[] = await response.json();
 
-    const companyCounts: Record<string, number> = {};
-    data.forEach((account) => {
-      companyCounts[account.companyName] = (companyCounts[account.companyName] || 0) + 1;
-    });
+        // setAccountData(data);
 
-    const groupedData: RowData[] = Object.entries(companyCounts).map(([name, number]) => ({
-      name,
-      number,
-    }));
+        const companyCounts: Record<string, number> = {};
+        data.forEach((account) => {
+          companyCounts[account.companyName] = (companyCounts[account.companyName] || 0) + 1;
+        });
 
-    setRowData(groupedData);
-  } catch (error) {
-    console.error('Failed to fetch account data:', error);
-  }
-};
+        const groupedData: RowData[] = Object.entries(companyCounts).map(([name, number]) => ({
+          name,
+          number,
+        }));
 
+        setRowData(groupedData);
+      } catch (error) {
+        console.error('Failed to fetch account data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredData = useMemo(() => {
     return rowData.filter((row) =>
@@ -109,12 +116,12 @@ const fetchData = async () => {
                   </td>
                   <td className="px-6 py-4">
                     <div
-                      className="w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[#02343F]"
+                      onClick={() => setSelectedCompany({ name: row.name, count: row.number })}
+                      className="w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[#02343F] cursor-pointer hover:bg-[#02343F] hover:text-[#F0EDCC] transition-all"
                     >
                       {row.number}
                     </div>
                   </td>
-
                 </tr>
               );
             })}
@@ -159,13 +166,13 @@ const fetchData = async () => {
       </div>
 
       {/* Popup */}
-      {/* {selectedCompany && (
+      {selectedCompany && (
         <CompanyAnalyticsPopup
           companyName={selectedCompany.name}
           accountCount={selectedCompany.count}
           onClose={() => setSelectedCompany(null)}
         />
-      )} */}
+      )}
     </div>
   );
 };
