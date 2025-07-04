@@ -1,24 +1,17 @@
 import AccountTable from '@/components/AccountTable';
 import CompanySummaryTable from '@/components/CompanySummaryTable';
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams?: { company?: string };
-}) {
-  // const allAccounts = await getAccountsFromApi();
-  const selectedCompany = searchParams?.company;
+interface DashboardPageProps {
+  searchParams?: Record<string, string | string[] | undefined>;
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  const selectedCompany = searchParams?.company as string | undefined;
 
   if (selectedCompany) {
-    // const companyAccounts = allAccounts.filter(
-    //   (account) => getCompanyName(account.id) === selectedCompany
-    // );
-    // --- UPDATED: Pass the companyName prop ---
-    return <AccountTable   />;
-    // <AccountTable accounts={companyAccounts} companyName={selectedCompany} />;
+    return <AccountTable />;
+    // You could pass companyName={selectedCompany} if needed
   } else {
-    // return <CompanySummaryTable accounts={allAccounts} />;
     return <CompanySummaryTable />;
-
   }
 }
