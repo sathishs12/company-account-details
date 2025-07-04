@@ -58,13 +58,15 @@ const AccountTable = () => {
   const startIdx = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIdx, startIdx + itemsPerPage);
 
-  const downloadExcel = (data: IAccount[], filename: string) => {
-    const dataToExport = data.map(({ avatar, ...rest }) => rest);
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Accounts");
-    XLSX.writeFile(workbook, filename);
-  };
+const downloadExcel = (data: IAccount[], filename: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const dataToExport = data.map(({ avatar, ...rest }) => rest);
+  const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Accounts");
+  XLSX.writeFile(workbook, filename);
+};
+
 
   return (
     <div className="flex flex-col shadow-md sm:rounded-lg bg-white">
