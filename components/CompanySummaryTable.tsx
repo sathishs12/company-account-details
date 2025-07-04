@@ -71,7 +71,7 @@ const CompanySummaryTable = () => {
   const paginatedData = filteredData.slice(startIdx, startIdx + itemsPerPage);
 
   return (
-    <div className="flex flex-col shadow-md sm:rounded-lg bg-white h-[480px]">
+    <div className="flex flex-col shadow-md sm:rounded-lg bg-white">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center justify-between p-4 border-b gap-4">
         <h1 className="text-xl md:text-3xl font-bold text-[#02343F]">Company Overview</h1>
